@@ -1090,40 +1090,42 @@ export class Jodit extends ViewWithToolbar implements IJodit {
 		this.setNativeEditorValue(this.getElementValue()); // Init value
 
 		(async () => {
-			await this.beforeInitHook();
+			if (this.events && this.events.fire) {
+				await this.beforeInitHook();
 
-			await this.events.fire('beforeInit', this);
+				await this.events.fire('beforeInit', this);
 
-			try {
-				this.__initPlugines();
-			} catch (e) {
-				console.error(e);
+				try {
+					this.__initPlugines();
+				} catch (e) {
+					console.error(e);
+				}
+
+				await this.__initEditor(buffer);
+
+				if (this.isDestructed) {
+					return;
+				}
+
+				const opt = this.options;
+
+				if (
+					opt.enableDragAndDropFileToEditor &&
+					opt.uploader &&
+					(opt.uploader.url || opt.uploader.insertImageAsBase64URI)
+				) {
+					this.uploader.bind(this.editor);
+				}
+
+				this.isInited = true;
+
+				if (this.events) {
+					await this.events.fire('afterInit', this);
+					this.events.fire('afterConstructor', this);
+				}
+
+				await this.afterInitHook();
 			}
-
-			await this.__initEditor(buffer);
-
-			if (this.isDestructed) {
-				return;
-			}
-
-			const opt = this.options;
-
-			if (
-				opt.enableDragAndDropFileToEditor &&
-				opt.uploader &&
-				(opt.uploader.url || opt.uploader.insertImageAsBase64URI)
-			) {
-				this.uploader.bind(this.editor);
-			}
-
-			this.isInited = true;
-
-			if (this.events) {
-				await this.events.fire('afterInit', this);
-				this.events.fire('afterConstructor', this);
-			}
-
-			await this.afterInitHook();
 		})();
 	}
 

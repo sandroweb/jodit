@@ -47,13 +47,14 @@ export const $$ = (
 
 		!id && (root as HTMLElement).setAttribute('id', temp_id);
 
-		result = (root.parentNode as HTMLElement).querySelectorAll(selector);
+		const parentElement:HTMLElement = (root.parentNode as HTMLElement);
+		result = parentElement && parentElement.querySelectorAll ? parentElement.querySelectorAll(selector) : new NodeList();
 
 		if (!id) {
 			(root as HTMLElement).removeAttribute('id');
 		}
 	} else {
-		result = root.querySelectorAll(selector);
+		result = root && root.querySelectorAll ? root.querySelectorAll(selector) : new NodeList();
 	}
 
 	return [].slice.call(result);
