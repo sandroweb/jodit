@@ -1217,10 +1217,10 @@ export class Jodit extends ViewWithToolbar implements IJodit {
 	private async __createEditor() {
 		const defaultEditorAreae: HTMLElement = this.editor;
 
-		const stayDefault: boolean | undefined = await this.events.fire(
+		const stayDefault: boolean | undefined = this.events && this.events.fire ? await this.events.fire(
 			'createEditor',
 			this
-		);
+		) : false;
 
 		if (this.isDestructed) {
 			return;

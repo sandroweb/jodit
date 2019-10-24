@@ -47,20 +47,24 @@ export const $$ = (
 
 		!id && (root as HTMLElement).setAttribute('id', temp_id);
 
-		const parentElement:HTMLElement = (root.parentNode as HTMLElement);
-		result = parentElement && typeof parentElement.querySelectorAll === 'function' ? parentElement.querySelectorAll(selector) : new NodeList();
-
 		if (!id) {
 			(root as HTMLElement).removeAttribute('id');
 		}
-	} else {
-		result = root && typeof root.querySelectorAll === 'function' ? root.querySelectorAll(selector) : new NodeList();
-	}
 
-	if (result) {
-		return [].slice.call(result);
+		const parentElement:HTMLElement = (root.parentNode as HTMLElement);
+		if (parentElement && typeof parentElement.querySelectorAll === 'function') {
+			result = parentElement.querySelectorAll(selector);
+			return [].slice.call(result);
+		}
+		return [];
+
+	} else {
+		if (root && typeof root.querySelectorAll === 'function') {
+			result = root.querySelectorAll(selector);
+			return [].slice.call(result);
+		}
+		return [];
 	}
-	return [];
 };
 
 export const getXPathByElement = (
