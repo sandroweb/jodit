@@ -1230,43 +1230,45 @@ export class Jodit extends ViewWithToolbar implements IJodit {
 			Dom.safeRemove(defaultEditorAreae);
 		}
 
-		if (this.options.editorCssClass) {
+		if (this.options && this.options.editorCssClass) {
 			this.editor.classList.add(this.options.editorCssClass);
 		}
 
-		if (this.options.style) {
+		if (this.options && this.options.style) {
 			css(this.editor, this.options.style);
 		}
 
 		// proxy events
-		this.events
-			.on('synchro', () => {
-				this.setEditorValue();
-			})
-			.on(
-				this.editor,
-				'selectionchange selectionstart keydown keyup keypress mousedown mouseup mousepress ' +
-				'click copy cut dragstart drop dragover paste resize touchstart touchend focus blur',
-				(event: Event): false | void => {
-					if (this.options.readonly) {
-						return;
-					}
-					if (this.events && this.events.fire) {
-						if (this.events.fire(event.type, event) === false) {
-							return false;
+		if (this.events && this.events.on) {
+			this.events
+				.on('synchro', () => {
+					this.setEditorValue();
+				})
+				.on(
+					this.editor,
+					'selectionchange selectionstart keydown keyup keypress mousedown mouseup mousepress ' +
+					'click copy cut dragstart drop dragover paste resize touchstart touchend focus blur',
+					(event: Event): false | void => {
+						if (this.options.readonly) {
+							return;
 						}
+						if (this.events && this.events.fire) {
+							if (this.events.fire(event.type, event) === false) {
+								return false;
+							}
 
-						this.setEditorValue();
+							this.setEditorValue();
+						}
 					}
-				}
-			);
+				);
+		}
 
-		if (this.options.spellcheck) {
+		if (this.options && this.options.spellcheck) {
 			this.editor.setAttribute('spellcheck', 'true');
 		}
 
 		// direction
-		if (this.options.direction) {
+		if (this.options && this.options.direction) {
 			const direction =
 				this.options.direction.toLowerCase() === 'rtl' ? 'rtl' : 'ltr';
 
@@ -1278,7 +1280,7 @@ export class Jodit extends ViewWithToolbar implements IJodit {
 			this.toolbar.setDirection(direction);
 		}
 
-		if (this.options.triggerChangeEvent) {
+		if (this.options && this.options.triggerChangeEvent) {
 			this.events.on(
 				'change',
 				debounce(() => {
