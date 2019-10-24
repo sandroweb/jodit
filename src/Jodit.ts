@@ -1090,7 +1090,7 @@ export class Jodit extends ViewWithToolbar implements IJodit {
 		this.setNativeEditorValue(this.getElementValue()); // Init value
 
 		(async () => {
-			if (this.events && this.events.fire) {
+			if (this.events && typeof this.events.fire === 'function') {
 				await this.beforeInitHook();
 
 				await this.events.fire('beforeInit', this);

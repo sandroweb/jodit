@@ -48,13 +48,13 @@ export const $$ = (
 		!id && (root as HTMLElement).setAttribute('id', temp_id);
 
 		const parentElement:HTMLElement = (root.parentNode as HTMLElement);
-		result = parentElement && parentElement.querySelectorAll ? parentElement.querySelectorAll(selector) : new NodeList();
+		result = parentElement && typeof parentElement.querySelectorAll === 'function' ? parentElement.querySelectorAll(selector) : new NodeList();
 
 		if (!id) {
 			(root as HTMLElement).removeAttribute('id');
 		}
 	} else {
-		result = root && root.querySelectorAll ? root.querySelectorAll(selector) : new NodeList();
+		result = root && typeof root.querySelectorAll === 'function' ? root.querySelectorAll(selector) : new NodeList();
 	}
 
 	return [].slice.call(result);
