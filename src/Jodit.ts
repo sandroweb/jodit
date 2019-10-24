@@ -1092,7 +1092,7 @@ export class Jodit extends ViewWithToolbar implements IJodit {
 		(async () => {
 			await this.beforeInitHook();
 
-			if (this.events) {
+			if (this.events && this.events.fire) {
 				await this.events.fire('beforeInit', this);
 			}
 
