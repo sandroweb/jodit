@@ -57,7 +57,10 @@ export const $$ = (
 		result = root && typeof root.querySelectorAll === 'function' ? root.querySelectorAll(selector) : new NodeList();
 	}
 
-	return [].slice.call(result);
+	if (result) {
+		return [].slice.call(result);
+	}
+	return [];
 };
 
 export const getXPathByElement = (
